@@ -10,4 +10,4 @@ Vue
 side by side :-
 
 project
-Eng & Germal One by One
+Eng & German One by One
