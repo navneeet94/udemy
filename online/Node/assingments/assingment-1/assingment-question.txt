@@ -4,4 +4,4 @@
     Return some greeting text on '/'
     Returns a list of dummy users (e.g <ul><li>User 1</li></ul>) => done
 
-3.) Add a form with a "username" <input> to the "/" page and submit a POST request to "/create-user" upon a button click
+3.) Add a form with a "username" <input> to the "/" page and submit a POST request to "/create-user" upon a button click => done
