@@ -31,7 +31,7 @@ const pageHandler = (req, res) => {
             console.log(parsedData)
             const username = parsedData.split("=")[1];
             console.log(username);
-            fs.writeFileSync('created-user.txt',username);
+            fs.writeFile('created-user.txt',username);
             res.statusCode = 302;
             res.setHeader('Location','/');
             return res.end();
