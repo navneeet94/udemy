@@ -207,3 +207,348 @@ router.get('/', (req, res, next) => {
 });
 
 module.exports = router
+
+//////////////////////////////// Filter Paths
+
+********** app.js
+const express = require('express');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+app.use((req,res,next)=> {
+    res.status(404).send('<h1>Page Not Found</h1>')
+})
+
+app.listen(3000)
+
+********** routes/admin.js
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/add-products', (req, res, next) => {
+    console.log('add product');
+    res.send('<form action="/admin/add-products" method="POST"><input type="text" name="title"  /><button type="submit">Add Product</button></form>');
+});
+
+router.post('/add-products', (req, res) => {
+    console.log(req.body);
+    res.redirect('/');
+})
+
+// router.use();
+
+module.exports = router;
+
+********** routes/shop.js
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+    console.log('home page');
+    res.send('<h1>Home Page</h1>');
+});
+
+module.exports = router
+
+
+
+//////////////////////////////// Creating & Serving HTML Pages
+
+********** app.js
+const path = require('path');
+
+const express = require('express');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(adminRoutes);
+app.use(shopRoutes);
+
+app.use((req,res,next)=> {
+    res.status(404).sendFile(path.join(__dirname, 'views', 'not-found.html'))
+})
+
+app.listen(3000)
+
+
+********** routes/admin.js
+const path = require('path');
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+    console.log('add product');
+    res.sendFile(path.join(__dirname , '../' , 'views', 'add-product.html'));
+});
+
+router.post('/add-product', (req, res) => {
+    console.log(req.body);
+    res.redirect('/');
+})
+
+// router.use();
+
+module.exports = router;
+
+
+********** routes/shop.js
+const path = require('path');
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+    console.log('home page');
+    res.sendFile(path.join(__dirname, '../' , 'views', 'shop.html'));
+});
+
+
+module.exports = router
+
+********** views/shop.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Shop</a></li>
+                <li><a href="/add-product">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>My Products</h1>
+        <p>Listst of products.........</p>
+    </main>
+</body>
+
+</html>
+
+
+********** views/add-product.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Shop</a></li>
+                <li><a href="/add-product">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form action="/admin/add-product" method="POST">
+            <input type="text" name="title" />
+            <button type="submit">Add Product</button>
+        </form>
+    </main>
+</body>
+
+</html>
+
+********** not-found.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found</title>
+</head>
+
+<body>
+
+    <main>
+        <h1>Page Not Found</h1>
+        <a href="/">Back to Home Page</a>
+    </main>
+</body>
+
+</html>
+
+
+//////////////////////////////// Using a Helper Function for Navigation files path
+
+********** app.js
+const path = require('path');
+
+const express = require('express');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(adminRoutes);
+app.use(shopRoutes);
+
+app.use((req,res,next)=> {
+    res.status(404).sendFile(path.join(__dirname, 'views', 'not-found.html'))
+})
+
+app.listen(3000)
+
+
+********** routes/admin.js
+const path = require('path');
+
+const baseDir = require('../util/path');
+
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+    console.log('add product');
+    res.sendFile(path.join(baseDir, 'views', 'add-product.html'));
+});
+
+router.post('/add-product', (req, res) => {
+    console.log(req.body);
+    res.redirect('/');
+})
+
+// router.use();
+
+module.exports = router;
+
+const path = require('path');
+const express = require('express');
+
+const baseDir = require('../util/path');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+    console.log('home page');
+    res.sendFile(path.join(baseDir , 'views', 'shop.html'));
+});
+
+module.exports = router
+
+********** views/shop.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Shop</a></li>
+                <li><a href="/add-product">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>My Products</h1>
+        <p>Listst of products.........</p>
+    </main>
+</body>
+
+</html>
+
+
+********** views/add-product.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Shop</a></li>
+                <li><a href="/add-product">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form action="/admin/add-product" method="POST">
+            <input type="text" name="title" />
+            <button type="submit">Add Product</button>
+        </form>
+    </main>
+</body>
+
+</html>
+
+********** not-found.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found</title>
+</head>
+
+<body>
+
+    <main>
+        <h1>Page Not Found</h1>
+        <a href="/">Back to Home Page</a>
+    </main>
+</body>
+
+</html>
