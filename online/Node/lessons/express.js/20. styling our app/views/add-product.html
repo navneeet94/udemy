@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 10px;
+        }
+
+
+        body {
+            font-size: 1.6rem;
+            font-family: 'Open Sans', sans-serif;
+            padding-top: 4.4rem;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .main-header {
+            width: 100%;
+            height: auto;
+            background: #8194d9;
+            padding: 1.3rem 1.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .main-header__item-list .main-header__item {
+            display: inline-block;
+            margin-right: 1.5rem;
+        }
+
+        .main-header__item-list .main-header__item:last-child {
+            margin-right: 0;
+        }
+
+        .main-header__item-list .main-header__item a {
+            color: #fff;
+        }
+
+        .main-header__item-list .main-header__item a:hover,
+        .main-header__item-list .main-header__item a:active,
+        .main-header__item-list .main-header__item a.active {
+            color: #000;
+            font-weight: bold;
+        }
+
+
+        .container-fluid {
+            padding: 0px 15px;
+            width: 100%;
+        }
+
+
+        main {
+            padding: 3rem 0;
+        }
+
+
+        .main-title {
+            font-size: 3.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .from-inline-control {
+            height: 40px;
+            width: 250px;
+            padding: 0px 1rem;
+        }
+
+        
+.submit {
+    margin-left: 1rem;
+    padding: 0.7rem 1.5rem;
+    height: 40px;
+}
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list">
+                <li class="main-header__item"><a href="/">Shop</a></li>
+                <li class="main-header__item"><a href="/amin/add-product" class="active">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container-fluid">
+            <h1 class="main-title">Add Products</h1>
+            <form action="/admin/add-product" method="POST">
+                <input type="text" name="title" class="from-inline-control" placeholder="Title" />
+                <button type="submit" class="submit">Add Product</button>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>
