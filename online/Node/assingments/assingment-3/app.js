@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const admin = require('./routes/admin');
 const front = require('./routes/front');
-// const front = require('./routes/admin');
 
 const app = express();
 
