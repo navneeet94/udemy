@@ -434,6 +434,13 @@ app.use((req,res,next)=> {
 app.listen(3000)
 
 
+********** util/path.js
+
+const path = require('path');
+
+module.exports = path.dirname(process.mainModule.filename);
+
+
 ********** routes/admin.js
 const path = require('path');
 
