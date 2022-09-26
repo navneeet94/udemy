@@ -1,0 +1,38 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{docTitle}
+        link(rel="stylesheet", href="/css/style.css")
+    body
+        header.main-header
+            nav.main-headr__nav 
+                ul.main-header__item-list
+                    li.main-header__item
+                        a.active(href="/") Shop
+                    li.main-header__item
+                        a(href="/admin/add-product") Add Product
+        
+        main
+            div.container-fluid
+                h1.main-title My Products
+                if prods.length > 0
+                    .row
+                        each product in prods
+                            .col.grid-5
+                                .myGrid 
+                                    article.card.product-item
+                                        h5.card-title #{product.title}
+                                        .card_image
+                                            img.w-100(src="https://images-na.ssl-images-amazon.com/images/I/81m1s4wIPML.jpg", alt="harry pottter")
+                                        .card_content
+                                            strong.product_price $19.99
+                                            p Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad esse officiis enim!
+                                        .card_actions
+                                            button.btn Add to Cart
+                else
+                    p No products found
+
+
