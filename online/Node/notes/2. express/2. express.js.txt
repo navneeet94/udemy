@@ -1,11 +1,11 @@
-//////////////////////////////// installing Express js
+(1.) //////////////////////////////// installing Express js
 
 npm i --save express
 
 
 
 
-//////////////////////////////// How middleware works
+(2.) //////////////////////////////// How middleware works
 const http = require('http');
 const express = require('express');
 
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 app.listen(3000)
 
-//////////////////////////////// Handling Different Routes
+(3.) //////////////////////////////// Handling Different Routes
 const http = require('http');
 const express = require('express');
 
@@ -48,7 +48,7 @@ app.use('/', (req, res, next) => {
 app.listen(3000)
 
 
-//////////////////////////////// Parsing Incoming Requests
+(4.) //////////////////////////////// Parsing Incoming Requests
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -76,7 +76,7 @@ app.listen(3000)
 
 
 
-//////////////////////////////// limiting middleware execution to POST requests
+(5.) //////////////////////////////// limiting middleware execution to POST requests
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -103,7 +103,7 @@ app.use('/', (req, res, next) => {
 app.listen(3000)
 
 
-//////////////////////////////// distribute code in multiple routes / Using Express Router
+(6.) //////////////////////////////// distribute code in multiple routes / Using Express Router
 
 ********** app.js
 const express = require('express');
@@ -154,7 +154,7 @@ router.get('/', (req, res, next) => {
 module.exports = router
 
 
-//////////////////////////////// adding 404 page
+(7.) //////////////////////////////// adding 404 page
 
 ********** app.js
 const express = require('express');
@@ -208,7 +208,7 @@ router.get('/', (req, res, next) => {
 
 module.exports = router
 
-//////////////////////////////// Filter Paths
+(8.) //////////////////////////////// Filter Paths
 
 ********** app.js
 const express = require('express');
@@ -264,7 +264,7 @@ module.exports = router
 
 
 
-//////////////////////////////// Creating & Serving HTML Pages
+(9.) //////////////////////////////// Creating & Serving HTML Pages
 
 ********** app.js
 const path = require('path');
@@ -408,7 +408,7 @@ module.exports = router
 </html>
 
 
-//////////////////////////////// Using a Helper Function for Navigation files path
+(10.) //////////////////////////////// Using a Helper Function for Navigation files path
 
 ********** app.js
 const path = require('path');
@@ -561,7 +561,7 @@ module.exports = router
 </html>
 
 
-//////////////////////////////// Styling web pages
+(11.) //////////////////////////////// Styling web pages
 
 ********** app.js
 const path = require('path');
@@ -863,7 +863,7 @@ module.exports = router
 </html>
 
 
-//////////////////////////////// serving file staticaly
+(12.) //////////////////////////////// serving file staticaly
 
 ********** app.js
 const path = require('path');
