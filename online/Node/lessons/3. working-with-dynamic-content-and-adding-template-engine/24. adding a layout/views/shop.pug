@@ -1,0 +1,23 @@
+extends layouts/main-layout.pug
+
+
+block content
+    h1.main-title My Products
+    if prods.length > 0
+        .row
+            each product in prods
+                .col.grid-5
+                    .myGrid 
+                        article.card.product-item
+                            h5.card-title #{product.title}
+                            .card_image
+                                img.w-100(src="https://images-na.ssl-images-amazon.com/images/I/81m1s4wIPML.jpg", alt="harry pottter")
+                            .card_content
+                                strong.product_price $19.99
+                                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad esse officiis enim!
+                            .card_actions
+                                button.btn Add to Cart
+    else
+        p No products found
+
+

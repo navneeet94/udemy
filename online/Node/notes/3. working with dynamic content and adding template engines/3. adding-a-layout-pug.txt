@@ -1,0 +1,270 @@
+(3.) //////////////////////////////// Adding A Layout with pug
+
+
+********** app.js
+const path = require('path');
+
+const express = require('express');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.set('view engine', 'pug');
+app.set('views', 'views');
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use('/admin',adminRoutes.routes);
+app.use(shopRoutes);
+
+app.use((req,res,next)=> {
+    res.status(404).render('not-found', {docTitle:'Page Not Found'})
+})
+
+app.listen(3000)
+
+
+********** routes/admin.js
+const path = require('path');
+
+const express = require('express');
+
+const router = express.Router();
+
+const product = [];
+
+router.get('/add-product', (req, res, next) => {
+    // console.log('add product');
+    res.render('add-product', {docTitle:"Add Product", path:'/admin/add-product'});
+});
+
+router.post('/add-product', (req, res) => {
+    // console.log(req.body);
+    product.push({title: req.body.title});
+    res.redirect('/');
+})
+
+// router.use();
+
+module.exports.routes = router;
+module.exports.products = product;
+
+
+********** routes/shop.js
+const path = require('path');
+const express = require('express');
+
+const adminData = require('./admin');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+    products = adminData.products
+    res.render('shop' , {prods:products, docTitle: 'Shop' , path : '/'});
+});
+
+
+
+module.exports = router
+
+
+********** views/shop.pug
+extends layouts/main-layout.pug
+
+
+block content
+    h1.main-title My Products
+    if prods.length > 0
+        .row
+            each product in prods
+                .col.grid-5
+                    .myGrid 
+                        article.card.product-item
+                            h5.card-title #{product.title}
+                            .card_image
+                                img.w-100(src="https://images-na.ssl-images-amazon.com/images/I/81m1s4wIPML.jpg", alt="harry pottter")
+                            .card_content
+                                strong.product_price $19.99
+                                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad esse officiis enim!
+                            .card_actions
+                                button.btn Add to Cart
+    else
+        p No products found
+
+
+
+********** views/add-product.pug
+extends layouts/main-layout.pug
+
+
+block content
+        h1.main-title Add Products
+        form(action="/admin/add-product",method="POST")
+            input.from-inline-control(type="text",name="title",placeholder="Title")#bookTitle
+            button.submit(type="submit") Add Product
+
+
+********** not-found.pug
+extends layouts/main-layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/not-found.css")
+
+
+block content
+    h1 Page Not Found
+    a(href="/") Back to Home Page
+
+
+
+********** style.css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+}
+
+
+body {
+    font-size: 1.6rem;
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 4.4rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.main-header {
+    width: 100%;
+    height: auto;
+    background: #8194d9;
+    padding: 1.3rem 1.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.main-header__item-list .main-header__item {
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+
+.main-header__item-list .main-header__item:last-child {
+    margin-right: 0;
+}
+
+.main-header__item-list .main-header__item a {
+    color: #fff;
+}
+
+.main-header__item-list .main-header__item a:hover,
+.main-header__item-list .main-header__item a:active,
+.main-header__item-list .main-header__item a.active {
+    color: #000;
+    font-weight: bold;
+}
+
+
+.container-fluid {
+    padding: 0px 15px;
+    width: 100%;
+}
+
+
+main {
+    padding: 3rem 0;
+}
+
+
+.main-title {
+    font-size: 3.6rem;
+    margin-bottom: 2rem;
+}
+
+.from-inline-control {
+    height: 40px;
+    width: 250px;
+    padding: 0px 1rem;
+}
+
+
+.submit {
+margin-left: 1rem;
+padding: 0.7rem 1.5rem;
+height: 40px;
+}
+
+/* grid */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px -15px;
+}
+
+
+.col {
+    padding: 0px 15px;
+}
+
+
+.grid-6 {
+    width: 50%;
+}
+
+.grid-5 {
+    width: 20%;
+}
+
+.grid-4 {
+    width: 25%;
+}
+
+
+
+
+/* product item */
+.product-item {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+
+.card-title {
+    font-size: 19px;
+    margin-bottom: 10px;
+}
+
+
+.card_actions {
+    margin-top: 20px;
+}
+
+
+.btn {
+    padding: 6px 15px;
+}
+
+
+.product_price {
+    color: green;
+    display: block;
+    margin: 10px 0px 5px;
+}
+
+********** not-found.css
