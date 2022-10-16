@@ -1,0 +1,16 @@
+extends layouts\main.pug
+
+
+block content
+    main.pt-4.pb-4
+    .container-fluid
+        h1.h3 Product List
+        section.books.mt-4
+            if prods.length > 0
+                .row
+                    each i in prods
+                        .col-lg-3.col-md-4.col-sm-6
+                            a(href="javascript:void(0)")
+                                .card.p-3.text-center #{i.title}
+            else
+                .jumbotron.bg-white.text-center.borderNot Found

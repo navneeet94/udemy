@@ -1,0 +1,14 @@
+html , body{
+    height: 100vh;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+html{
+    font-size: 10px;
+}
+
+body{
+    font-size: 1.6rem;
+    background-color: #efefef;
+}

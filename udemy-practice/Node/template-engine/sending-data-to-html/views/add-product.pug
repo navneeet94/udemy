@@ -1,0 +1,15 @@
+extends layouts\main.pug
+
+block content
+    main.pt-4.pb-4
+        .container-fluid
+            h1.h3 Add New Product
+            form.card.shadow.mt-5.p-4(action="/add-product", method="POST")
+                .row
+                    .col-lg-10.col-md-9.col-sm-8
+                        .form-group
+                            label.font-weight-bold.mb-3(for="bookTitle") Title
+                            input.form-control(type="text", name="title")#bookTitle
+                    .col-lg-2.col-md-3.col-sm-4
+                        .form-group.pt-1
+                            button.btn.btn-primary.btn-block.mt-5(type="submit") Send
