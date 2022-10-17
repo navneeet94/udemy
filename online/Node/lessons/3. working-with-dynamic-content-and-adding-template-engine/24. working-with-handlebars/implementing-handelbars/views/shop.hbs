@@ -13,7 +13,7 @@
     <header class="main-header">
         <nav class="main-header__nav">
             <ul class="main-header__item-list">
-                <li class="main-header__item"><a href="/">Shop</a></li>
+                <li class="main-header__item"><a href="/" class="active">Shop</a></li>
                 <li class="main-header__item"><a href="/admin/add-product">Add Product</a></li>
             </ul>
         </nav>
@@ -22,7 +22,29 @@
     <main>
         <div class="container-fluid">
             <h1 class="main-title">My Products</h1>
-            <p>Listst of products.........</p>
+            {{!-- <p>Listst of products.........</p> --}}
+
+            <section>
+                <div class="row">
+                    <div class="col grid-5">
+                        <div class="myGrid">
+                            <article class="card product-item">
+                                <h5 class="card-title">Lorem ipsum dolor sit amet.</h5>
+                                <div class="card-image">
+                                    <img src="https://images-na.ssl-images-amazon.com/images/I/81m1s4wIPML.jpg" alt="harry pottter" class="w-100">
+                                </div>
+                                <div class="card-content">
+                                    <strong class="product_price">$19.99</strong>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed rem molestiae quis sunt quas. Quam vero eum tenetur.</p>
+                                </div>
+                                <div class="card_actions">
+                                    <button class="btn">Add to Cart</button>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 </body>

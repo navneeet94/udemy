@@ -1,0 +1,328 @@
+(3.) //////////////////////////////// implementing code in handlebars
+
+
+********** app.js
+const path = require('path');
+
+const express = require('express');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const expressHbs = require('express-handlebars');
+
+app.engine('.hbs', expressHbs.engine({ extname: '.hbs', defaultLayout: 'main'}))
+
+app.set('view engine', '.hbs');
+app.set('views', 'views');
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use('/admin',adminRoutes.routes);
+app.use(shopRoutes);
+
+app.use((req,res,next)=> {
+    res.status(404).render('not-found', {docTitle:'Page Not Found',notFoundCSS:true,notFoundCSS:true})
+})
+
+app.listen(3000)
+
+
+********** routes/admin.js
+const path = require('path');
+
+const express = require('express');
+
+const router = express.Router();
+
+const product = [];
+
+router.get('/add-product', (req, res, next) => {
+    // console.log('add product');
+    res.render('add-product', {docTitle:"Add Product", path: '/add-product', activeAddProduct:true});
+});
+
+router.post('/add-product', (req, res) => {
+    // console.log(req.body);
+    product.push({title: req.body.title});
+    res.redirect('/');
+})
+
+// router.use();
+
+module.exports.routes = router;
+module.exports.products = product;
+
+
+
+********** routes/shop.js
+const path = require('path');
+const express = require('express');
+
+const adminData = require('./admin');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+    products = adminData.products
+    res.render('shop' , {prods:products, docTitle: 'Shop', path: '/' , hasProducts: adminData.products.length > 0, activeShop: true});
+});
+
+
+
+module.exports = router
+
+
+
+********** views/layouts/main.hbs
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{docTitle}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    {{#if notFoundCSS}}
+        <link rel="stylesheet" href="/css/not-found.css">
+    {{/if}}
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list">
+                <li class="main-header__item"><a href="/" class="{{#if activeShop}}active{{/if}}">Shop</a></li>
+                <li class="main-header__item"><a href="/admin/add-product" class="{{#if activeAddProduct}}active{{/if}}">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+    {{{body}}}
+</body>
+</html>
+
+
+********** views/shop.hbs
+<main>
+    <div class="container-fluid">
+        <h1 class="main-title">My Products</h1>
+        {{!-- <p>Listst of products.........</p> --}}
+
+        {{#if hasProducts }}
+            <section>
+                <div class="row">
+                    {{#each prods}}
+                        <div class="col grid-5">
+                            <div class="myGrid">
+                                <article class="card product-item">
+                                    <h5 class="card-title">{{this.title}}</h5>
+                                    <div class="card-image">
+                                        <img src="https://images-na.ssl-images-amazon.com/images/I/81m1s4wIPML.jpg" alt="harry pottter" class="w-100">
+                                    </div>
+                                    <div class="card-content">
+                                        <strong class="product_price">$19.99</strong>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed rem molestiae quis sunt quas. Quam vero eum tenetur.</p>
+                                    </div>
+                                    <div class="card_actions">
+                                        <button class="btn">Add to Cart</button>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </section>
+            {{ else }}
+                <p>Listst of products.........</p>    
+        {{/if}}
+    </div>
+</main>
+
+
+********** views/add-product.hbs
+<main>
+    <div class="container-fluid">
+        <h1 class="main-title">Add Products</h1>
+        <form action="/admin/add-product" method="POST">
+            <input type="text" name="title" class="from-inline-control" placeholder="Title" />
+            <button type="submit" class="submit">Add Product</button>
+        </form>
+    </div>
+</main>
+
+
+********** views/not-found.hbs
+{{#if notFoundCSS}}
+    <link rel="stylesheet" href="/css/not-found.css">
+{{/if}}
+
+<main>
+    <div class="container-fluid not-found">
+        <h1>Page Not Found</h1>
+        <a href="/">Back to Home Page</a>
+    </div>
+</main>
+
+
+********** style.css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+}
+
+
+body {
+    font-size: 1.6rem;
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 4.4rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.main-header {
+    width: 100%;
+    height: auto;
+    background: #8194d9;
+    padding: 1.3rem 1.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.main-header__item-list .main-header__item {
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+
+.main-header__item-list .main-header__item:last-child {
+    margin-right: 0;
+}
+
+.main-header__item-list .main-header__item a {
+    color: #fff;
+}
+
+.main-header__item-list .main-header__item a:hover,
+.main-header__item-list .main-header__item a:active,
+.main-header__item-list .main-header__item a.active {
+    color: #000;
+    font-weight: bold;
+}
+
+
+.container-fluid {
+    padding: 0px 15px;
+    width: 100%;
+}
+
+
+main {
+    padding: 3rem 0;
+}
+
+
+.main-title {
+    font-size: 3.6rem;
+    margin-bottom: 2rem;
+}
+
+.from-inline-control {
+    height: 40px;
+    width: 250px;
+    padding: 0px 1rem;
+}
+
+
+.submit {
+margin-left: 1rem;
+padding: 0.7rem 1.5rem;
+height: 40px;
+}
+
+/* grid */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px -15px;
+}
+
+
+.col {
+    padding: 0px 15px;
+}
+
+
+.grid-6 {
+    width: 50%;
+}
+
+.grid-5 {
+    width: 20%;
+}
+
+.grid-4 {
+    width: 25%;
+}
+
+
+
+
+/* product item */
+.product-item {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+
+.card-title {
+    font-size: 19px;
+    margin-bottom: 10px;
+}
+
+
+.card_actions {
+    margin-top: 20px;
+}
+
+
+.btn {
+    padding: 6px 15px;
+}
+
+
+.product_price {
+    color: green;
+    display: block;
+    margin: 10px 0px 5px;
+}
+
+
+
+********** not-found.css
+.not-found {
+    text-align: center;
+}
+
+.not-found h1 {
+    margin-bottom: 20px;
+}
+
+a:hover{
+    text-decoration: underline;
+}
