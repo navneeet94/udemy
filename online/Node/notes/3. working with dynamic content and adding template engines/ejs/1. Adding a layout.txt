@@ -1,0 +1,338 @@
+(3.) //////////////////////////////// implementing code in handlebars
+
+
+********** app.js
+
+const path = require('path');
+const express = require('express');
+
+const app = express();
+
+const bodyParser = require('body-parser');
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+
+const adminRoutes = require('./routes/admin')
+const shopRoutes = require('./routes/shop')
+
+app.use(bodyParser.urlencoded({extended: false}))
+
+app.use(express.static(path.join(__dirname,'public')));
+app.use(adminRoutes.route);
+app.use(shopRoutes);
+app.use((req,res) => {
+    res.status(404).render('404',{pageTitle:'Page Not Found'});
+})
+
+app.listen(3001)
+
+
+
+********** routes/admin.js
+const express = require('express');
+const routes = express.Router();
+
+const product = []
+
+routes.get('/add-product', (req, res) => {
+    res.render('add-product',
+        {
+            pageTitle: 'Add Product',
+            path:'/add-product'
+        });
+})
+
+routes.post('/add-product', (req, res) =>{
+    currentProd = req.body
+    product.push({title:currentProd.title});
+    res.redirect('/');
+})
+
+module.exports.route = routes
+module.exports.products = product
+
+
+
+********** routes/shop.js
+const express = require('express');
+const routes = express.Router();
+const adminData = require('./admin');
+
+routes.get('/', (req, res, next) => {
+    const productList = adminData.products
+    console.log(productList);
+    res.render("shop",
+        {
+            pageTitle: 'Shop',
+            path:'/',
+            prods: productList
+        });
+})
+
+module.exports = routes
+
+
+********** views/includes/head.ejs
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title><%= pageTitle %></title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link rel="stylesheet" href="/css/style.css" />
+
+
+********** views/includes/end.ejs
+</body>
+</html>
+
+
+********** views/includes/navigation.ejs
+<header class="main-header">
+    <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+            <li class="main-header__item"><a href="/" class="<%= path === '/' ? 'active':'' %>">Shop</a></li>
+            <li class="main-header__item"><a href="/add-product" class="<%= path === '/add-product' ? 'active':'' %>">Add Product</a></li>
+        </ul>
+    </nav>
+</header>
+
+********** views/includes/scripts.ejs
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+
+********** views/shop.ejs
+<%- include('includes/head') %>
+<link rel="stylesheet" href="/css/product.css" />
+</head>
+<body>
+    <%- include('includes/navigation') %>
+    <main>
+        <h1>Shop</h1>
+        <% if (prods.length > 0) { %>
+            <div class="grid">
+                <% for (i of prods) { %>
+                    <article class="card product-item">
+                        <header class="card__header">
+                            <h1 class="product__title"><%= i.title %></h1>
+                        </header>
+                        <div class="card__image">
+                            <img src="" alt="A Book">
+                        </div>
+                        <div class="card__content">
+                            <h2 class="product__price">$19.99</h2>
+                            <p class="product__description">A very interesting book about so many even more interesting things!</p>
+                        </div>
+                        <div class="card__actions">
+                            <button class="btn">Add to Cart</button>
+                        </div>
+                    </article>
+                <% } %>
+            </div>
+        <% } else { %>
+            <p>No Products Found</p>
+        <% } %>
+    </main>
+    <%- include('includes/scripts') %>
+<%- include('includes/end') %>
+
+
+********** views/add-product.ejs
+<%- include('includes/head') %>
+<link rel="stylesheet" href="/css/forms.css" />
+<link rel="stylesheet" href="/css/product.css" />
+</head>
+<body>
+    <%- include('includes/navigation') %>
+    <main>
+        <form class="product-form" action="/add-product" method="POST">
+            <div class="form-control">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title">
+            </div>
+
+            <button class="btn" type="submit">Add Product</button>
+        </form>
+    </main>
+    <%- include('includes/scripts') %>
+<%- include('includes/end') %>
+
+
+
+********** views/not-found.ejs
+<%- include('includes/head') %>
+</head>
+<body>
+    <main>
+        <h1>Page Not Found</h1>
+    </main>
+    <%- include('includes/scripts') %>
+<%- include('includes/end') %>
+
+
+
+********** style.css
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+main {
+  padding: 1rem;
+  margin: auto;
+}
+
+.main-header {
+  width: 100%;
+  height: 3.5rem;
+  background-color: #00695c;
+  padding: 0 1.5rem;
+}
+
+.main-header__nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.main-header__item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.main-header__item {
+  margin: 0 1rem;
+  padding: 0;
+}
+
+.main-header__item a {
+  text-decoration: none;
+  color: white;
+}
+
+.main-header__item a:hover,
+.main-header__item a:active,
+.main-header__item a.active {
+  color: #ffeb3b;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.card__header,
+.card__content {
+  padding: 1rem;
+}
+
+.card__header h1,
+.card__content h1,
+.card__content h2,
+.card__content p {
+  margin: 0;
+}
+
+.card__image {
+  width: 100%;
+}
+
+.card__image img {
+  width: 100%;
+}
+
+.card__actions {
+    padding: 1rem;
+    text-align: center;
+}
+
+.card__actions button,
+.card__actions a {
+    margin: 0 0.25rem;
+}
+
+.btn {
+  font: inherit;
+  border: 1px solid #00695c;
+  color: #00695c;
+  background: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #00695c;
+  color: white;
+}
+
+
+
+********** product.css
+.product-form {
+    width: 20rem;
+    max-width: 90%;
+    margin: auto;
+}
+
+.product-item {
+    width: 20rem;
+    max-width: 95%;
+}
+
+.product__title {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.product__price {
+    text-align: center;
+    color: #4d4d4d;
+    margin-bottom: 0.5rem;
+}
+
+.product__description {
+    text-align: center;
+}
+
+********** forms.css
+.form-control {
+    margin: 1rem 0;
+}
+
+.form-control label,
+.form-control input {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.25rem;
+}
+
+.form-control input {
+    border: 1px solid #a1a1a1;
+    font: inherit;
+    border-radius: 2px;
+}
+
+.form-control input:focus {
+    outline-color: #00695c;
+}
